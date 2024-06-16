@@ -41,7 +41,7 @@ class Client:
         map_id : str
             The ID of the map to get.
         """
-        route = Route("GET", f"/maps/{map_id}", staging=staging)
+        route = Route("GET", f"/maps/{map_id}", staging=str(staging).lower())
         try:
             response = await self.http.request(route, headers={"X-API-Key": self.api_key})
             if not isinstance(response, dict) or "data" not in response:
@@ -67,7 +67,7 @@ class Client:
         size : int
             The size of the map to get.
         """
-        route = Route("GET", f"/maps/{size}/{seed}", staging=staging)
+        route = Route("GET", f"/maps/{size}/{seed}", staging=str(staging).lower())
         try:
             response = await self.http.request(route, headers={"X-API-Key": self.api_key})
             if not isinstance(response, dict) or "data" not in response:
