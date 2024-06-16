@@ -19,7 +19,7 @@ class Client:
 
     def __init__(
         self,
-        api_key: str,  # TODO: Add InvalidTokenError check to this.
+        api_key: str,
         *,
         loop: asyncio.AbstractEventLoop | None = None,
         connector: aiohttp.BaseConnector | None = None,
