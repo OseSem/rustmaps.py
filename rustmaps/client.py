@@ -46,6 +46,19 @@ class Client:
             # Don't need to add anything here as the HTTPClient already handles the errors.
             return None
 
+    @property
+    async def saved_configs(self) -> dict[str, Any] | None:
+        """Get the saved configurations."""
+        route = Route("GET", "/maps/custom/saved-configs")
+        try:
+            response = await self.http.request(route, headers={"X-API-Key": self.api_key})
+            if not isinstance(response, dict) or "data" not in response:
+                return None
+            return response["data"]
+        except GeneralHTTPError:
+            # Don't need to add anything here as the HTTPClient already handles the errors.
+            return None
+
     async def get_map(self, map_id: str, *, staging: bool = False) -> dict[str, Any] | None:
         """Get a map by its ID.
 
