@@ -7,6 +7,7 @@ _log = logging.getLogger(__name__)
 __all__ = (
     "BaseBotError",
     "GeneralHTTPError",
+    "InvalidTokenError",
 )
 
 
@@ -30,6 +31,5 @@ class InvalidTokenError(Exception):
 
     def __init__(self, token: str) -> None:
         msg = f"Invalid token: {token}"
-        _log.error(msg)
 
         super().__init__(msg)

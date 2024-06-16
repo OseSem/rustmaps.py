@@ -9,7 +9,7 @@ from typing import Any, ClassVar
 import aiohttp
 import yarl
 
-from .errors import GeneralHTTPError
+from .errors import GeneralHTTPError, InvalidTokenError
 
 if t.TYPE_CHECKING:
     import asyncio
@@ -24,7 +24,8 @@ __all__ = (
 
 _log = logging.getLogger(__name__)
 
-SUCCESS_RESPONSE = 200
+SUCCESS_RESPONSES = [200, 201]
+UNAUTHORIZED = 401
 
 
 async def json_or_text(
@@ -148,7 +149,13 @@ class HTTPClient:
             data = await json_or_text(response)
             _log.debug(f"{method} {url} received {data}")
 
-            if response.status == SUCCESS_RESPONSE:
+            # I do it this way because some endpoints can return 201.
+            if response.status in SUCCESS_RESPONSES:
                 return data
+            if response.status == UNAUTHORIZED:
+                await self.close()
+                raise InvalidTokenError(
+                    headers["X-API-Key"] if headers["X-API-Key"] else "Token Not Provided.",
+                )
 
             raise GeneralHTTPError(method, url, response.status)
