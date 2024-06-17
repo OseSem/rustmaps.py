@@ -6,8 +6,6 @@ rustmaps.py
 =======
 <p align="center">
     <img src="https://img.shields.io/github/actions/workflow/status/OseSem/rustmaps.py/ci.yml?branch=master&style=flat-square" alt="Build Status"></img>
-    <a href="https://pypi.org/project/rustmaps.py/"><img src="https://img.shields.io/pypi/v/rustmaps.svg?style=flat-square" alt="PyPI version info" /></a>
-    <a href="https://pypi.org/project/rustmaps.py/"><img src="https://img.shields.io/pypi/pyversions/rustmaps.svg?style=flat-square" alt="PyPI supported Python versions" /></a>
     <a href="https://github.com/OseSem/rustmaps.py/commits"><img src="https://img.shields.io/github/commit-activity/w/OseSem/rustmaps.py.svg?style=flat-square" alt="Commit activity" /></a>
 </p>
 
