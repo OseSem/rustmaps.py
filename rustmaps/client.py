@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from typing import TYPE_CHECKING, Any
 
-from .errors import GeneralHTTPError
+from .errors import HTTPException
 from .http import HTTPClient, Route
 
 if TYPE_CHECKING:
@@ -42,7 +42,7 @@ class Client:
             if not isinstance(response, dict) or "data" not in response:
                 return None
             return response["data"]
-        except GeneralHTTPError:
+        except HTTPException:
             # Don't need to add anything here as the HTTPClient already handles the errors.
             return None
 
@@ -55,7 +55,7 @@ class Client:
             if not isinstance(response, dict) or "data" not in response:
                 return None
             return response["data"]
-        except GeneralHTTPError:
+        except HTTPException:
             # Don't need to add anything here as the HTTPClient already handles the errors.
             return None
 
@@ -73,7 +73,7 @@ class Client:
             if not isinstance(response, dict) or "data" not in response:
                 return None
             return response["data"]
-        except GeneralHTTPError:
+        except HTTPException:
             # Don't need to add anything here as the HTTPClient already handles the errors.
             return None
 
@@ -99,7 +99,7 @@ class Client:
             if not isinstance(response, dict) or "data" not in response:
                 return None
             return response["data"]
-        except GeneralHTTPError:
+        except HTTPException:
             # Don't need to add anything here as the HTTPClient already handles the errors.
             return None
 
@@ -111,6 +111,6 @@ class Client:
             if not isinstance(response, dict) or "data" not in response:
                 return None
             return response["data"]
-        except GeneralHTTPError:
+        except HTTPException:
             # Don't need to add anything here as the HTTPClient already handles the errors.
             return None

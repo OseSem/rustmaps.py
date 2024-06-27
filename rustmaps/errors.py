@@ -1,35 +1,84 @@
 # SPDX-License-Identifier: MIT
+from __future__ import annotations
 
 import logging
+import typing as t
+
+if t.TYPE_CHECKING:
+    from typing import Any
+
+    from aiohttp import ClientResponse
 
 _log = logging.getLogger(__name__)
 
 __all__ = (
-    "BaseBotError",
-    "GeneralHTTPError",
-    "InvalidTokenError",
+    "HTTPException",
+    "Unauthorized",
+    "Forbidden",
+    "NotFound",
+    "NotFinishedGenerating",
 )
 
 
-class BaseBotError(Exception):
-    """Base bot error all custom errors inherit from."""
+def _flatten_error_dict(d: dict[str, Any], key: str = "") -> dict[str, str]:
+    items: list[tuple[str, str]] = []
+    for k, v in d.items():
+        new_key = f"{key}.{k}" if key else k
+
+        if isinstance(v, dict):
+            try:
+                _errors: list[dict[str, Any]] = v["_errors"]
+            except KeyError:
+                items.extend(_flatten_error_dict(v, new_key).items())
+            else:
+                items.append((new_key, " ".join(x.get("message", "") for x in _errors)))
+        else:
+            items.append((new_key, v))
+
+    return dict(items)
 
 
-class GeneralHTTPError(Exception):
-    """General HTTP error."""
+class HTTPException(Exception):
+    """Base exception for all HTTP exceptions."""
 
-    def __init__(self, method: str, url: str, status: int) -> None:
-        msg = f"{method} request to {url} failed - {status}"
-        _log.error(msg)
+    def __init__(self, response: ClientResponse, message: str | dict[str, Any]) -> None:
+        self.response = response
+        self.status = response.status
+        self.message = message
 
-        super().__init__(f"Request to {url} failed - {status}")
-        self.status = status
+        self.code: int
+        self.text: str
+        if isinstance(message, dict):
+            self.code = message.get("code", 0)
+            base = message.get("message", "")
+            errors = message.get("errors")
+            if errors:
+                errors = _flatten_error_dict(errors)
+                helpful = "\n".join(f"In {k}: {m}" for k, m in errors.items())
+                self.text = base + "\n" + helpful
+            else:
+                self.text = base
+        else:
+            self.text = message or ""
+            self.code = 0
+
+        fmt = "{0.status} {0.reason} (error code: {1})"
+        if len(self.text):
+            fmt += ": {2}"
+        super().__init__(fmt.format(self.response, self.code, self.text))
 
 
-class InvalidTokenError(Exception):
-    """Raised when an invalid token is passed to the client."""
+class Unauthorized(HTTPException):
+    """Raised when a 401 status code is returned from the API."""
 
-    def __init__(self, token: str) -> None:
-        msg = f"Invalid token: {token}"
 
-        super().__init__(msg)
+class Forbidden(HTTPException):
+    """Raised when a 403 status code is returned from the API."""
+
+
+class NotFound(HTTPException):
+    """Raised when a 404 status code is returned from the API."""
+
+
+class NotFinishedGenerating(HTTPException):
+    """Raised when a 409 status code is returned from the API."""

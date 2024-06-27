@@ -13,7 +13,7 @@ async def main() -> None:
     logging.basicConfig(level=logging.DEBUG)
     logging.getLogger("rustmaps").setLevel(logging.DEBUG)
 
-    client = Client("f808bde9d91244b788ea145eff54497f")
+    client = Client("f808bde9d91244b788ea145eff54497fs")
 
     map_id = input("Enter a map ID: ")
     found_map = await client.get_map(map_id)

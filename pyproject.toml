@@ -54,6 +54,12 @@ lint.ignore = [
 "rustmaps/__init__.py" = [
     "F403", # Let's us import with *
 ]
+"rustmaps/errors.py" = [
+    "N818", # Putting Error behind Exception class.
+]
+"rustmaps/http.py" = [
+    "PLR2004" # No constant variable.
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
