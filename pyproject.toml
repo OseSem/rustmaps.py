@@ -1,0 +1,69 @@
+# SPDX-License-Identifier: MIT
+
+[tool.poetry]
+name = "rustmaps"
+version = "0.1.0"
+description = "An API Wrapper for rustmaps.com written in Python."
+authors = ["OseSem"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+yarl = "^1.9.4"
+aiohttp = "^3.9.5"
+
+[tool.poetry.group.dev.dependencies]
+python-dotenv = "^1.0.0"
+isort = "^5.13.2"
+ruff = "^0.1.13"
+black = "^24.4.2"
+rich = "^13.7.1"
+pre-commit = "^3.7.1"
+pyright = "^1.1.363"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.10"
+ignore = [
+    ".venv",
+    "venv",
+]
+
+[tool.ruff]
+line-length = 100
+lint.select = ["ALL"]
+lint.ignore = [
+    "ERA001", # commented out code.
+    "ANN101", # Why would I type annotate self
+    "D100", # docstrings in public modules.
+    "D104", # docstrings in public package.
+    "FIX002", # Let me have a todo man.
+    "TD002", # I don't need an author for a todo.
+    "TD003", # I don't need an issue link for a todo either.
+]
+
+[tool.ruff.lint.per-file-ignores]
+"rustmaps/__init__.py" = [
+    "F403", # Let's us import with *
+]
+"rustmaps/errors.py" = [
+    "N818", # Putting Error behind Exception class.
+]
+"rustmaps/http.py" = [
+    "PLR2004" # No constant variable.
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
